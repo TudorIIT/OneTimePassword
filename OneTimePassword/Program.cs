@@ -1,7 +1,6 @@
 ﻿using OneTimePassword.DataModels;
 using OneTimePassword.Functions;
 using System.Globalization;
-using System.Reflection.Metadata.Ecma335;
 
 Console.Write("Type your user ID: ");
 var userID = Console.ReadLine();
@@ -22,10 +21,9 @@ PasswordGenerator passwordGenerator = new PasswordGenerator();
 Password password = new Password(userID, userDate, passwordGenerator.GeneratePassword());
 Console.WriteLine(password.otPassword);
 
-if (PasswordTimeChecks.checkPasswordTime(password))
+Task.Run(() => FakeLogin.Login(password));
+
+if (await PasswordTimeChecks.checkPasswordTime(password))
 {
-    Console.WriteLine("Password expired!");
+    Console.WriteLine("\nPassword expired!");
 }
-
-
-

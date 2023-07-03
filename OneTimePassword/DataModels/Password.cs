@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace OneTimePassword.DataModels
 {
-    internal class Password
+    public class Password
     {
-        private string userID { get; set; }
+        internal string userID { get; set; }
         private DateOnly userDate { get; set; }
         public DateTime GeneratedTime { get; set; }
         internal string otPassword { get; set; }
-        private bool validity { get; set; }
+        public bool validity { get; private set; }
 
         public Password(string userID, DateOnly userDate, string password)
         {

@@ -13,16 +13,24 @@ namespace OneTimePassword.Functions
         //private Password password { get; set; }
         //public PasswordTimeChecks(Password password) { this.password = password; }
 
-        public static bool checkPasswordTime(Password password, double TimeToWait = 30) 
+        public static async Task<bool> checkPasswordTime(Password password, double TimeToWait = 30)
         {
-            while (DateTime.Compare(password.GeneratedTime.AddSeconds(TimeToWait), DateTime.Now) > 0)
+            await Task.Run(() =>
             {
-                Thread.Sleep(500);
-            }
-            
-            password.SetValidityToFalse();
-            return true;
+                while (DateTime.Compare(password.GeneratedTime.AddSeconds(TimeToWait), DateTime.Now) > 0)
+                {
+                    Task.Delay(500);
 
+                    if (!password.validity)
+                    {
+                        return true;
+                    }
+                }
+                password.SetValidityToFalse();
+                return true;
+            });
+
+            return true;
         }
     }
 }
