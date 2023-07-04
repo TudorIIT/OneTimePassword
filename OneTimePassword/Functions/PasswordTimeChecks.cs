@@ -15,7 +15,7 @@ namespace OneTimePassword.Functions
 
         public static async Task<bool> checkPasswordTime(Password password, double TimeToWait = 30)
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 while (DateTime.Compare(password.GeneratedTime.AddSeconds(TimeToWait), DateTime.Now) > 0)
                 {
@@ -27,6 +27,7 @@ namespace OneTimePassword.Functions
                     }
                 }
                 password.SetValidityToFalse();
+
                 return true;
             });
 

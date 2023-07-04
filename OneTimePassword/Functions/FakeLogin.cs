@@ -17,7 +17,7 @@ namespace OneTimePassword.Functions
             Console.Write("Your UserID: ");
             await Task.Run(() => userid = Console.ReadLine());
 
-            if (userid != password.userID)
+            while (userid != password.userID)
             {
                 Console.Write("The UserID does not match. Please re-enter: ");
                 await Task.Run(() => userid = Console.ReadLine());
@@ -26,19 +26,21 @@ namespace OneTimePassword.Functions
             Console.Write("Enter the OTP: ");
             await Task.Run(() => pass = Console.ReadLine());
 
-            if (pass != password.otPassword)
+            while (pass != password.otPassword)
             {
                 Console.Write("The password is not valid. Please re-enter: ");
                 await Task.Run(() => pass = Console.ReadLine());
             }
-            else
-                if (!password.validity)
+
+            if (!password.validity)
             {
                 Console.WriteLine("Password is expired!");
             }
+
             if (pass == password.otPassword && password.validity)
             {
                 Console.WriteLine("Great! You enetered a valid password.");
+                password.SetValidityToFalse();
             }
                 
 

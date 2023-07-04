@@ -2,28 +2,34 @@
 using OneTimePassword.Functions;
 using System.Globalization;
 
-Console.Write("Type your user ID: ");
-var userID = Console.ReadLine();
+namespace OneTimePassword
+{ 
+    class Program
+    {
+        static async Task Main(string[] args)
+        {
+            Console.Write("Type your user ID: ");
+            var userID = Console.ReadLine();
 
-Console.Write("Type the date (format DD/MM/YYYY): ");
-var dateString = Console.ReadLine();
+            Console.Write("Type the date (format DD/MM/YYYY): ");
+            var dateString = Console.ReadLine();
 
-while(!DateOnly.TryParse(dateString, new CultureInfo("en-GB"), DateTimeStyles.None, out DateOnly date))
-{
-    Console.Write("Invalid Date Format. Please re-enter the Date: ");
-    dateString = Console.ReadLine();
-}
+            while (!DateOnly.TryParse(dateString, new CultureInfo("en-GB"), DateTimeStyles.None, out DateOnly date))
+            {
+                Console.Write("Invalid Date Format. Please re-enter the Date: ");
+                dateString = Console.ReadLine();
+            }
 
-DateOnly userDate = DateOnly.Parse(dateString, new CultureInfo("en-GB"), DateTimeStyles.None);
+            DateOnly userDate = DateOnly.Parse(dateString, new CultureInfo("en-GB"), DateTimeStyles.None);
 
-PasswordGenerator passwordGenerator = new PasswordGenerator();
+            PasswordGenerator passwordGenerator = new PasswordGenerator();
 
-Password password = new Password(userID, userDate, passwordGenerator.GeneratePassword());
-Console.WriteLine(password.otPassword);
+            Password password = new Password(userID, userDate, passwordGenerator.GeneratePassword());
+            Console.WriteLine(password.otPassword);
 
-Task.Run(() => FakeLogin.Login(password));
+            var tasks = new List<Task>() {PasswordTimeChecks.checkPasswordTime(password), FakeLogin.Login(password) };
 
-if (await PasswordTimeChecks.checkPasswordTime(password))
-{
-    Console.WriteLine("\nPassword expired!");
+            await Task.WhenAll(tasks);
+        }
+    }
 }
