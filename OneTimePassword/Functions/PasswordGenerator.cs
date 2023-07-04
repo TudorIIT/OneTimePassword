@@ -12,7 +12,7 @@ namespace OneTimePassword.Functions
         public int PasswordLength { get; set; } = 6;
         public string[] AllowedCharacters { get; set; } = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
         
-        internal string GeneratePassword()
+        public string GeneratePassword()
         {
             Random random= new Random();
             string characterToAdd = string.Empty;
